@@ -1,0 +1,6 @@
+bin
+obj
+aoc-crypt.key
+.idea
+.vs
+.vscode
