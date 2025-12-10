@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -107,7 +107,7 @@ class Runner {
 
         var workingDir = solver.WorkingDir();
         var indent = "    ";
-        Write(ConsoleColor.White, $"{indent}{solver.DayName()}: {solver.GetName()}");
+        //Write(ConsoleColor.White, $"{indent}{solver.DayName()}: {solver.GetName()}");
         WriteLine();
         var dir = workingDir;
         var file = Path.Combine(workingDir, "input.in");
