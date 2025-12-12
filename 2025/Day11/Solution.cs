@@ -11,7 +11,7 @@ class Solution : Solver {
 
     public object PartOne(string input) {
         var graph = ParseInput(input);
-        return CountPaths(graph, "you", "out");
+        return CountPaths(graph, "you", "out"); //714 (1.397 ms)
     }
 
     public object PartTwo(string input) {
@@ -20,11 +20,17 @@ class Solution : Solver {
         var start = "svr";
         var end = "out";
 
-        string[] requiredNodes = ["dac", "fft"];
+        // this can be used for more than 2 nodes permutation is handled here
+        //string[] requiredNodes = ["dac", "fft"];
+        //return requiredNodes.GetPermutations(2)
+        //    .Select(per => CountPathsThroughNodes(graph, start, per.ToArray(), end))
+        //    .Sum(); //333852915427200 (4.746 ms) but this is slower than simply interating over it.
 
-        return requiredNodes.GetPermutations(2)
-            .Select(per => CountPathsThroughNodes(graph, start, per.ToArray(), end))
-            .Sum();
+        var pathCount = 0L;
+        pathCount += CountPathsThroughNodes(graph, start, ["dac", "fft"], end);
+        pathCount += CountPathsThroughNodes(graph, start, ["fft", "dac"], end);
+
+        return pathCount; // 333852915427200 (0.905 ms)
     }
 
 
@@ -44,11 +50,8 @@ class Solution : Solver {
         Dictionary<string, List<string>> graph,
         string current,
         string target,
-        HashSet<string> visited = null,
         Dictionary<string, long> memo = null
     ) {
-
-        visited ??= [];
         memo ??= [];
 
         if (memo.TryGetValue(current, out var value)) {
@@ -61,17 +64,12 @@ class Solution : Solver {
         if (!graph.ContainsKey(current))
             return 0;
 
-        visited.Add(current);
-
         long pathCount = 0;
 
         foreach (var next in graph[current]) {
-            if (!visited.Contains(next)) {
-                pathCount += CountPaths(graph, next, target, visited, memo);
-            }
+            pathCount += CountPaths(graph, next, target, memo);
         }
 
-        visited.Remove(current);
         memo[current] = pathCount;
         return pathCount;
     }
